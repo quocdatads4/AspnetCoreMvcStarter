@@ -7,6 +7,9 @@ namespace AspnetCoreMvcStarter.Models
   {
     public ProfileGroupsDTO? ProfileGroupsDTO { get; set; }
     public List<ProfileGroupsDTO>? ProfileGroupsList { get; set; }
-   
+
+    public ProfileOrbitasDTO? ProfileOrbitasDTO { get; set; }
+    public List<ProfileOrbitasDTO>? ProfileOrbitasList { get; set; }
+
   }
 }

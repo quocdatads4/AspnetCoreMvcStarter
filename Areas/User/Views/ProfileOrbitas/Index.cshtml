@@ -1,0 +1,56 @@
+@model _UserMainDTO
+@{
+    ViewData["Title"] = "Danh sách hồ sơ";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <h6 class="mb-0 text-uppercase">Danh sách nhóm</h6>
+        <hr>
+
+        <div class="card">
+            <div class="card-datatable table-responsive pt-0">
+                <table class="datatables-basic table">
+                    <thead>
+                        <tr>
+                            <th>Chọn</th>
+                            <th>Profile ID</th>
+                            <th>Profile Name</th>
+                            <th>Trạng thái</th>
+                            <th>Nhóm</th>
+                            <th>Hành động</th>
+                            <th>Cập nhật</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var data in Model.ProfileOrbitasList)
+                        {
+                            <tr>
+                                <td><input type="checkbox" value="@data.Id" /></td>
+                                <td>@data.Id</td>
+                                <td>@data.ProfileName</td>
+                                <td>@data.Status</td>
+                                <td>@data.ProfileGroupID</td>
+                                <td>
+                                    <a href="@Url.Action("Edit", new { id = data.Id })" class="btn btn-sm btn-warning">Sửa</a>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('@Url.Action("Delete", new { id = profileGroup.Id })')">Xóa</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageScripts
+{
+    <script>
+        function confirmDelete(deleteUrl) {
+            if (confirm("Bạn có chắc chắn muốn xóa dữ liệu này không?")) {
+                window.location.href = deleteUrl;
+            }
+        }
+    </script>
+}

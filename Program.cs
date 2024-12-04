@@ -1,4 +1,5 @@
 using AspnetCoreMvcStarter.Areas.User.BusinessLogicLayer;
+using AspnetCoreMvcStarter.Areas.User.Data;
 using AspnetCoreMvcStarter.Areas.User.DataAccessLayer;
 using AspnetCoreMvcStarter.Data;
 using AspnetCoreMvcStarter.Models;
@@ -30,7 +31,27 @@ builder.Services.Configure<IdentityOptions>(otp =>
 builder.Services.AddScoped<ProfileGroupsBLL>();
 builder.Services.AddScoped<ProfileGroupsDAL>();
 
+builder.Services.AddScoped<ProfileOrbitasBLL>();
+builder.Services.AddScoped<ProfileOrbitasDAL>();
+
 var app = builder.Build();
+
+// Seed data
+using (var scope = app.Services.CreateScope())
+{
+  var services = scope.ServiceProvider;
+
+  try
+  {
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var seeder = new DataSeeder(context);
+    seeder.SeedData();
+  }
+  catch (Exception ex)
+  {
+    // Log or handle the exception as needed
+  }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
