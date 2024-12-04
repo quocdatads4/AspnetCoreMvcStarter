@@ -1,0 +1,110 @@
+@model AspnetCoreMvcStarter.ViewModels.LoginVM
+@{
+    Layout = "_BlankLayout";
+    ViewData["Title"] = "Đăng nhập tài khoản";
+}
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/&#64;form-validation/form-validation.css" />
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/&#64;form-validation/popular.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/bootstrap5.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/auto-focus.js"></script>
+}
+
+@section PageStyles {
+    <link rel="stylesheet" href="~/vendor/css/pages/page-auth.css">
+}
+
+@section PageScripts {
+    <script src="~/js/pages-auth.js"></script>
+}
+@* ************** Content ************** *@
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner py-6">
+            <!-- Login -->
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center mb-6">
+                        <a href="/" class="app-brand-link">
+                            <span class="app-brand-logo demo">@await Html.PartialAsync("../_Partials/_Macros")</span>
+                            <span class="app-brand-text demo text-heading fw-bold">@TempData.Peek("appName")</span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+                    <h4 class="mb-1">Chào mừng đến với @TempData.Peek("appName")! 👋</h4>
+                    <p class="mb-6">Vui lòng đăng nhập vào tài khoản và bắt đầu công việc của bạn</p>
+                    <form id="formAuthentication" class="mb-4" asp-action="LoginBasic" method="POST" asp-route-returnurl="@ViewData["ReturnUrl"]">
+
+                        <div class="mb-6">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                        </div>
+                        <div class="mb-6">
+                            <label asp-for="Email" class="form-label">Địa chỉ Email</label>
+                            <input type="text" asp-for="Email" class="form-control" placeholder="Vui lòng điền địa chỉ email" autofocus />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-6 form-password-toggle">
+                            <label class="form-label" for="password">Mật khẩu</label>
+                            <div class="input-group input-group-merge">
+                                <input asp-for="Password" type="password" id="password" class="form-control" name="password" placeholder="Mật khẩu 8 ký tự trở lên" aria-describedby="password" />
+                                <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="my-8">
+                            <div class="d-flex justify-content-between">
+                                <div class="form-check mb-0 ms-2">
+                                    <input class="form-check-input" type="checkbox" id="remember-me">
+                                    <label class="form-check-label" asp-for="RememberMe">
+                                        Nhớ trạng thái đăng nhập
+                                    </label>
+                                </div>
+                                <a href="/User/Auth/ForgotPasswordBasic" >
+                                    <p class="mb-0">Quên mật khẩu?</p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <button class="btn btn-primary d-grid w-100" type="submit">Đăng nhập</button>
+                        </div>
+                    </form>
+
+                    <p class="text-center">
+                        <span>Bạn mới tham gia nền tảng của chúng tôi?</span>
+                        <a href="/Auth/RegisterBasic">
+                            <span>Tạo một tài khoản</span>
+                        </a>
+                    </p>
+
+                    <div class="divider my-6">
+                        <div class="divider-text">or</div>
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-facebook me-1_5">
+                            <i class="tf-icons ti ti-brand-facebook-filled"></i>
+                        </a>
+
+                        <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-twitter me-1_5">
+                            <i class="tf-icons ti ti-brand-twitter-filled"></i>
+                        </a>
+
+                        <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-github me-1_5">
+                            <i class="tf-icons ti ti-brand-github-filled"></i>
+                        </a>
+
+                        <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-google-plus">
+                            <i class="tf-icons ti ti-brand-google-filled"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Register -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+@{
+  TempData.Keep();
+  string? currentPage =  ViewContext.HttpContext.Request.Path;
+}
+
+<!-- Menu -->
+@* ! Do this simple *@
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+
+  @* ! Hide app brand if navbar-full *@
+  <div class='app-brand demo @((@ViewData["navbarFull"] != null && Convert.ToBoolean(@ViewData["navbarFull"])) ? "d-xl-none" : "")'>
+    <a asp-controller="Home" asp-action="Index" class="app-brand-link">
+      <span class="app-brand-logo demo">
+        @await Html.PartialAsync("../_Partials/_Macros")
+      </span>
+      <span class="app-brand-text demo menu-text fw-bold">@TempData.Peek("appName")</span>
+    </a>
+
+    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+      <i class="ti menu-toggle-icon d-none d-xl-block align-middle"></i>
+      <i class="ti ti-x d-block d-xl-none ti-md align-middle"></i>
+    </a>
+  </div>
+
+  <div class="menu-inner-shadow"></div>
+
+  @* ! Starter Kit menu-items *@
+  <ul class="menu-inner py-1">
+    <li class='menu-item@(currentPage == "/" ? " active" : "")'>
+      <a asp-controller="Home" asp-action="Index" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-smart-home"></i>
+                <div data-i18n="Bảng điều khiển">Bảng điều khiển</div>
+      </a>
+    </li>
+
+    <li class='menu-item@(currentPage == "/Page2" ? " active" : "")'>
+      <a asp-controller="Page2" asp-action="Index" class="menu-link">
+        <i class="menu-icon tf-icons ti ti-app-window"></i>
+        <div data-i18n="Page 2">Page 2</div>
+      </a>
+    </li>
+  </ul>
+    <div class="card rounded-4">
+        <div class="card-body">
+            <div class="d-flex align-items-start gap-3 border p-3 rounded">
+                <div class="detail-icon fs-5">
+                    <i class="ti ti-building-bank"></i>
+                </div>
+                <div class="detail-info">
+                    <p class="fw-bold mb-1">Số dư chính</p>
+                    <a href="javascript:;" class="mb-0">0 VND</a>
+                </div>
+            </div>
+
+            <br />
+            <div class="d-flex align-items-start gap-3 border p-3 rounded">
+                <div class="detail-icon fs-5">
+                    <i class="ti ti-coin"></i>
+                </div>
+                <div class="detail-info">
+                    <h6 class="mb-0">Gói đang dùng</h6>
+                    <a href="javascript:;" class="mb-0">Free</a>
+                </div>
+            </div>
+            <br />
+            <div class="d-flex align-items-start gap-3 border p-3 rounded">
+                <div class="detail-icon fs-5">
+                    <i class="ti ti-calendar-user"></i>
+                </div>
+                <div class="detail-info">
+                    <h6 class="mb-0">Hồ sơ hiện có</h6>
+                    <a href="javascript:;" class="mb-0">Hồ sơ</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</aside>
+<!-- / Menu -->
