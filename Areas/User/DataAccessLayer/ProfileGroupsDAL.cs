@@ -4,44 +4,44 @@ using System;
 
 namespace AspnetCoreMvcStarter.Areas.User.DataAccessLayer
 {
-  public class ProfileOrbitasDAL
+  public class ProfileGroupsDAL
   {
     private readonly ApplicationDbContext _context;
-
-    public ProfileOrbitasDAL(ApplicationDbContext context)
+    
+    public ProfileGroupsDAL(ApplicationDbContext context)
     {
       _context = context;
     }
 
-    public List<ProfileOrbitasDTO> GetAll()
+    public List<ProfileGroupsDTO> GetAll()
     {
-      return _context.ProfileOrbitas.ToList();
+      return _context.ProfileGroups.ToList();
     }
 
-    public ProfileOrbitasDTO GetById(int id)
+    public ProfileGroupsDTO GetById(int id)
     {
-      return _context.ProfileOrbitas.FirstOrDefault(pg => pg.Id == id);
+      return _context.ProfileGroups.FirstOrDefault(pg => pg.Id == id);
     }
 
-    public void Add(ProfileOrbitasDTO modelDTO)
+    public void Add(ProfileGroupsDTO modelDTO)
     {
 
-      _context.ProfileOrbitas.Add(modelDTO);
+      _context.ProfileGroups.Add(modelDTO);
       _context.SaveChanges();
     }
 
-    public void Update(ProfileOrbitasDTO modelDTO)
+    public void Update(ProfileGroupsDTO modelDTO)
     {
-      _context.ProfileOrbitas.Update(modelDTO);
+      _context.ProfileGroups.Update(modelDTO);
       _context.SaveChanges();
     }
 
     public void Delete(int id)
     {
-      var data = _context.ProfileOrbitas.FirstOrDefault(pg => pg.Id == id);
+      var data = _context.ProfileGroups.FirstOrDefault(pg => pg.Id == id);
       if (data != null)
       {
-        _context.ProfileOrbitas.Remove(data);
+        _context.ProfileGroups.Remove(data);
         _context.SaveChanges();
       }
     }

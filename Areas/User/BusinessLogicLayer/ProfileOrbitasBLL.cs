@@ -11,13 +11,12 @@ namespace AspnetCoreMvcStarter.Areas.User.BusinessLogicLayer
     {
       _dal = DAL;
     }
-
     public List<ProfileOrbitasDTO> GetAll()
     {
       return _dal.GetAll();
     }
 
-    public ProfileOrbitasDTO GetProfileGroupById(int id)
+    public ProfileOrbitasDTO GetById(int id)
     {
       return _dal.GetById(id);
     }

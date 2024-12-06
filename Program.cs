@@ -36,22 +36,22 @@ builder.Services.AddScoped<ProfileOrbitasDAL>();
 
 var app = builder.Build();
 
-// Seed data
-using (var scope = app.Services.CreateScope())
-{
-  var services = scope.ServiceProvider;
+//// Seed data
+//using (var scope = app.Services.CreateScope())
+//{
+//  var services = scope.ServiceProvider;
 
-  try
-  {
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    var seeder = new DataSeeder(context);
-    seeder.SeedData();
-  }
-  catch (Exception ex)
-  {
-    // Log or handle the exception as needed
-  }
-}
+//  try
+//  {
+//    var context = services.GetRequiredService<ApplicationDbContext>();
+//    var seeder = new DataSeeder(context);
+//    seeder.SeedData();
+//  }
+//  catch (Exception ex)
+//  {
+//    // Log or handle the exception as needed
+//  }
+//}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -72,7 +72,7 @@ app.UseRouting();
 
 app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=ProfileOrbitas}/{action=ProfileOrbitasList}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

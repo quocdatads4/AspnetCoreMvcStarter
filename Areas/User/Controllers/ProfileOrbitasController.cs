@@ -7,22 +7,39 @@ namespace AspnetCoreMvcStarter.Areas.User.Controllers
   [Area("User")]
   public class ProfileOrbitasController : Controller
   {
-    private readonly ProfileOrbitasBLL _profileOrbitasBLL;
+    private readonly ProfileOrbitasBLL _dataBLL;
 
     public ProfileOrbitasController(ProfileOrbitasBLL profileOrbitasBLL)
     {
-      _profileOrbitasBLL = profileOrbitasBLL;
+      _dataBLL = profileOrbitasBLL;
     }
 
-    public IActionResult Index()
+    public IActionResult ProfileOrbitasList()
     {
-      var data = _profileOrbitasBLL.GetAll(); // Returns IEnumerable<ProfileGroupsDTO>
+      var data = _dataBLL.GetAll();
       var userMainDTO = new _UserMainDTO
       {
-        ProfileOrbitasList = data.ToList() // Assuming ProfileGroups is a property of type List<ProfileGroupsDTO>
+        ProfileOrbitasList = data.ToList()
       };
       return View(userMainDTO);
     }
-  
+
+    public IActionResult ProfileOrbitasCreate()
+    {
+      return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(ProfileOrbitasDTO modelDTO)
+    {
+      if (ModelState.IsValid)
+      {
+        _dataBLL.Add(modelDTO);
+        return RedirectToAction(nameof(Index));
+      }
+      return View(modelDTO);
+    }
+
   }
 }

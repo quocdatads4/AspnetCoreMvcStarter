@@ -1,0 +1,83 @@
+@model _UserMainDTO
+@{
+    ViewData["Title"] = "Danh sách hồ sơ";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <h6 class="mb-0 text-uppercase">Danh sách nhóm</h6>
+        <hr>
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="ps-3">
+                <button id="checkAllButton" onclick="checkAll()" type="button" class="btn btn-primary px-4 raised d-flex gap-2"><i class="ti ti-aspect-ratio"></i>Chọn tất cả</button>
+            </div>
+            <div class="ps-2">
+                <button id="uncheckAllButton" onclick="uncheckAll()" type="button" class="btn btn-secondary raised d-flex"><i class="ti ti-aspect-ratio"></i>Bỏ chọn</button>
+            </div>
+            <div class="ps-2">
+                <button id="buttonAll" onclick="buttonAllClicked()" type="button" class="btn btn-success px-4 raised d-flex gap-2"><i class="ti ti-player-play"></i> Tự động chạy</button>
+            </div>
+
+         @*  <div class="ps-4">
+                <select name="SelectedProfileGroup" id="SelectedProfileGroup" class="form-select">
+                    @foreach (var group in Model.ProfileGroupSelectList)
+                    {
+                        <option value="@group.Value">@group.Text</option>
+                    }
+                </select>
+            </div>
+ *@
+            <div class="ps-2">
+                <a asp-area="User" asp-controller="ProfileGroup" asp-action="TableProfileGroup" class="btn btn-success px-4 raised d-flex gap-2">
+                    <i class="ti ti-user-circle"></i> Nhóm hồ sơ
+                </a>
+            </div>
+            <div class="ps-2">
+                <a asp-area="User" asp-controller="ProfileOrbita" asp-action="TableProfileOrbita" class="btn btn-success px-4 raised d-flex gap-2">
+                    <i class="ti ti-calendar-user"></i>
+                    Thêm hồ sơ
+                </a>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <div class="card-datatable table-responsive pt-0">
+                <table class="datatables-basic table">
+                    <thead>
+                        <tr>
+                            <th>Chọn</th>
+                            <th>Profile ID</th>
+                            <th>Profile Name</th>
+                            <th>Trạng thái</th>
+                            <th>Nhóm</th>
+                            <th>Hành động</th>
+                            <th>Cập nhật</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var data in Model.ProfileOrbitasList)
+                        {
+                            <tr>
+                                <td><input type="checkbox" value="@data.Id" /></td>
+                                <td>@data.Id</td>
+                                <td>@data.ProfileName</td>
+                                <td>@data.Status</td>
+                                <td>@data.ProfileGroupID</td>
+                                <td>
+                                    <a href="@Url.Action("Edit", new { id = data.Id })" class="btn btn-sm btn-warning">Sửa</a>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('@Url.Action("Delete", new { id = data.Id })')">Xóa</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ DataTable with Buttons -->
+@section PageScripts
+{
+ 
+} 

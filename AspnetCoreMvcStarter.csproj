@@ -28,4 +28,10 @@
     <Folder Include="Areas\Admin\Views\" />
     <Folder Include="Areas\User\Models\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot\js\app-profile-orbitas-list.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

@@ -1,0 +1,20 @@
+@model _UserMainDTO
+@{
+    ViewData["Title"] = "Thêm hồ sơ";
+}
+
+<div class="row">
+    <div class="col-xl-4">
+        <h6 class="mb-0 text-uppercase">THÊM HỒ SƠ</h6>
+        <hr>
+        <div class="col-md-12">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label for="Name" class="form-label">Tên hồ sơ:</label>
+                    <input type="text" class="form-control" id="Name" name="Name" placeholder="Vui lòng điền tên hồ sơ">
+                </div>
+                <button type="submit" class="btn btn-success waves-effect waves-light">Thêm</button>
+            </form>
+        </div>
+    </div>
+</div>

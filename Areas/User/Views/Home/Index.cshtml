@@ -19,21 +19,22 @@
                             <th>Trạng thái</th>
                             <th>Nhóm</th>
                             <th>Hành động</th>
-                            <th>Cập nhật</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var profileGroup in Model.ProfileGroupsList)
+                        @foreach (var data in Model.ProfileOrbitasList)
                         {
                             <tr>
-                                <td><input type="checkbox" value="@profileGroup.Id" /></td>
-                                <td>@profileGroup.Id</td>
-                                <td>@profileGroup.Name</td>
-                                <td>@profileGroup.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                <td><input type="checkbox" value="@data.Id" /></td>
+                                <td>@data.Id</td>
+                                <td>@data.ProfileName</td>
+                                <td>@data.Status)</td>
+                                <td>@data.ProfileGroupID)</td>
                                 <td>
-                                    <a href="@Url.Action("Edit", new { id = profileGroup.Id })" class="btn btn-sm btn-warning">Sửa</a>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('@Url.Action("Delete", new { id = profileGroup.Id })')">Xóa</button>
+                                    <a href="@Url.Action("Edit", new { id = data.Id })" class="btn btn-sm btn-warning">Sửa</a>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('@Url.Action("Delete", new { id = data.Id })')">Xóa</button>
                                 </td>
+                                
                             </tr>
                         }
                     </tbody>
