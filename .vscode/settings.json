@@ -41,4 +41,5 @@
   "git.enableSmartCommit": true,
   // Extension: npm
   "npm.packageManager": "yarn",
+  "CodeGPT.apiKey": "OpenAI",
 }

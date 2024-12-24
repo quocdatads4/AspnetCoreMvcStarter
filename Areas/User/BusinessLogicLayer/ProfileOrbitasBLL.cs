@@ -1,5 +1,6 @@
 using AspnetCoreMvcStarter.Areas.User.DataAccessLayer;
 using AspnetCoreMvcStarter.Models;
+using NuGet.Protocol.Core.Types;
 
 namespace AspnetCoreMvcStarter.Areas.User.BusinessLogicLayer
 {
@@ -15,7 +16,6 @@ namespace AspnetCoreMvcStarter.Areas.User.BusinessLogicLayer
     {
       return _dal.GetAll();
     }
-
     public ProfileOrbitasDTO GetById(int id)
     {
       return _dal.GetById(id);

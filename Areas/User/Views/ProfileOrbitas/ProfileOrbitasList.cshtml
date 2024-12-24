@@ -1,83 +1,263 @@
 @model _UserMainDTO
 @{
-    ViewData["Title"] = "Danh sách hồ sơ";
+    ViewData["Title"] = "User List - Pages";
 }
 
-<div class="row">
-    <div class="col-xl-12">
-        <h6 class="mb-0 text-uppercase">Danh sách nhóm</h6>
-        <hr>
-        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-            <div class="ps-3">
-                <button id="checkAllButton" onclick="checkAll()" type="button" class="btn btn-primary px-4 raised d-flex gap-2"><i class="ti ti-aspect-ratio"></i>Chọn tất cả</button>
-            </div>
-            <div class="ps-2">
-                <button id="uncheckAllButton" onclick="uncheckAll()" type="button" class="btn btn-secondary raised d-flex"><i class="ti ti-aspect-ratio"></i>Bỏ chọn</button>
-            </div>
-            <div class="ps-2">
-                <button id="buttonAll" onclick="buttonAllClicked()" type="button" class="btn btn-success px-4 raised d-flex gap-2"><i class="ti ti-player-play"></i> Tự động chạy</button>
-            </div>
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.css">
+    <link rel="stylesheet" href="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css">
 
-         @*  <div class="ps-4">
-                <select name="SelectedProfileGroup" id="SelectedProfileGroup" class="form-select">
-                    @foreach (var group in Model.ProfileGroupSelectList)
+    <link rel="stylesheet" href="~/vendor/libs/jquery-datatables/jquery.datatables.css">
+@*     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"> *@
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+}
+
+@section PageScripts {
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        // Hàm kiểm tra số lượng checkbox trong bảng
+        function countCheckboxes() {
+            var checkboxes = document.querySelectorAll('#profileOrbitaTableBody input[type="checkbox"]');
+            return checkboxes.length;
+        }
+
+        // Hàm check tất cả các checkbox
+        function checkAll() {
+            var checkboxes = document.querySelectorAll('#profileOrbitaTableBody input[type="checkbox"]');
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = true;
+            });
+        }
+        // Hàm uncheck tất cả các checkbox
+        function uncheckAll() {
+            var checkboxes = document.querySelectorAll('#profileOrbitaTableBody input[type="checkbox"]');
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = false;
+            });
+        }
+        // Ví dụ: Sử dụng hàm countCheckboxes để hiển thị số lượng checkbox
+        document.addEventListener('DOMContentLoaded', (event) => {
+            console.log("Number of checkboxes in the table: " + countCheckboxes());
+        });
+
+        // Ví dụ: Add an event listener to a button to call checkAll()
+        document.getElementById('checkAllButton').addEventListener('click', checkAll);
+
+        // Ví dụ: Add an event listener to a button to call uncheckAll()
+        document.getElementById('uncheckAllButton').addEventListener('click', uncheckAll);
+
+        function displayErrorMessage(message) {
+            var messageDiv = document.getElementById('groupMessage');
+            if (messageDiv) {
+                messageDiv.style.display = 'block'; // Hiển thị div nếu nó đang ẩn
+                messageDiv.innerHTML = message; // Cập nhật nội dung thông báo lỗi
+                messageDiv.className = 'alert alert-danger'; // Cập nhật class để hiển thị thông báo lỗi
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Get the serialized data from the model
+            var data = @Html.Raw(Json.Serialize(Model.ProfileOrbitasList))
+
+            console.log(data); // Log to console for debugging
+
+            // Display data on the page
+            // document.getElementById("jsonDataDisplay").textContent = JSON.stringify(data, null, 2); // Pretty print JSON
+
+            $('#profileOrbitasTable').DataTable({
+                data: data,  // Pass data to DataTables
+                columns: [
+                    { data: null, defaultContent: '<input type="checkbox" id="id" name="orbitaCheckboxes" value="id" />', title: 'CheckAll' },
+                    { data: 'id', title: 'ID' },
+                    { data: 'profileName', title: 'Profile Name' },
+                    { data: 'status', title: 'Status' },
+                    { data: 'profileGroupID', title: 'Profile Group ID' },
+                    { data: 'userId', title: 'User ID' },
                     {
-                        <option value="@group.Value">@group.Text</option>
-                    }
-                </select>
-            </div>
- *@
-            <div class="ps-2">
-                <a asp-area="User" asp-controller="ProfileGroup" asp-action="TableProfileGroup" class="btn btn-success px-4 raised d-flex gap-2">
-                    <i class="ti ti-user-circle"></i> Nhóm hồ sơ
-                </a>
-            </div>
-            <div class="ps-2">
-                <a asp-area="User" asp-controller="ProfileOrbita" asp-action="TableProfileOrbita" class="btn btn-success px-4 raised d-flex gap-2">
-                    <i class="ti ti-calendar-user"></i>
-                    Thêm hồ sơ
-                </a>
-            </div>
-
-        </div>
-
-        <div class="card">
-            <div class="card-datatable table-responsive pt-0">
-                <table class="datatables-basic table">
-                    <thead>
-                        <tr>
-                            <th>Chọn</th>
-                            <th>Profile ID</th>
-                            <th>Profile Name</th>
-                            <th>Trạng thái</th>
-                            <th>Nhóm</th>
-                            <th>Hành động</th>
-                            <th>Cập nhật</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var data in Model.ProfileOrbitasList)
-                        {
-                            <tr>
-                                <td><input type="checkbox" value="@data.Id" /></td>
-                                <td>@data.Id</td>
-                                <td>@data.ProfileName</td>
-                                <td>@data.Status</td>
-                                <td>@data.ProfileGroupID</td>
-                                <td>
-                                    <a href="@Url.Action("Edit", new { id = data.Id })" class="btn btn-sm btn-warning">Sửa</a>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('@Url.Action("Delete", new { id = data.Id })')">Xóa</button>
-                                </td>
-                            </tr>
+                        data: null,
+                        title: 'Actions',
+                        orderable: false, // Disable sorting for this column
+                        render: function (data, type, row) {
+                            return '<button id="' + row.id + '" class="btn btn-success waves-effect waves-light" onclick="buttonClicked(this.id)" data-id="' + row.id + '">Mở</button> ' +
+                                   '<button class="edit-btn btn btn-sm btn-warning waves-effect waves-light" data-id="' + row.id + '">Sửa</button> ' +
+                                   '<button class="delete-btn btn btn-sm btn-danger waves-effect waves-light"" data-id="' + row.id + '">Xoá</button> ';
                         }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                ],
+                paging: true,
+                pageLength: 10
+            });
+
+            // Event handler for Edit button
+            $('#profileOrbitasTable').on('click', '.edit-btn', function () {
+                var id = $(this).data('id');
+                console.log('Edit button clicked for ID:', id);
+                // Redirect to the Edit action in the controller
+                window.location.href = '@Url.Action("ProfileOrbitasEdit", "ProfileOrbitas")?id=' + id;
+            });
+
+            // Event handler for Delete button
+            $('#profileOrbitasTable').on('click', '.delete-btn', function () {
+                var id = $(this).data('id');
+                console.log('Delete button clicked for ID:', id);
+                window.location.href = '@Url.Action("Delete", "ProfileOrbitas")?id=' + id;
+            });
+        });
+
+        let lastButtonIdClicked;
+
+        function buttonClicked(buttonId) {
+            if (lastButtonIdClicked !== buttonId) {
+                try {
+                    // Cập nhật ID của nút cuối cùng đã được nhấn
+                    lastButtonIdClicked = buttonId;
+
+                    // Kiểm tra xem đối tượng window.chrome.webview có tồn tại và có phương thức postMessage hay không
+                    if (window.chrome && window.chrome.webview && typeof window.chrome.webview.postMessage === 'function') {
+                        // Gửi thông điệp qua window.chrome.webview.postMessage
+                        window.chrome.webview.postMessage(buttonId);
+                    } else {
+                        // Nếu không tồn tại đối tượng hoặc phương thức cần thiết, thông báo lỗi
+                        displayErrorMessage('window.chrome.webview.postMessage không khả dụng.');
+                    }
+                } catch (error) {
+                    // Bắt và thông báo lỗi nếu có
+                    displayErrorMessage('Có lỗi xảy ra khi gửi thông điệp: ' + error.message);
+                }
+            }
+        }
+    </script>
+}
+
+@* ************** Content ************** *@
+
+<!-- Users List Table -->
+<div class="nav-align-top nav-tabs-shadow mb-6">
+    <ul class="nav nav-tabs nav-fill" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button type="button" class="nav-link waves-effect active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-home" aria-controls="navs-justified-home" aria-selected="true">
+                <span class="d-none d-sm-block">
+                    <i class="tf-icons ti ti-home ti-sm me-1_5"></i> Hồ sơ
+                    <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-1_5 pt-50">3</span>
+                </span><i class="ti ti-home ti-sm d-sm-none"></i>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button type="button" class="nav-link waves-effect" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-profile" aria-controls="navs-justified-profile" aria-selected="false" tabindex="-1">
+                <span class="d-none d-sm-block"><i class="tf-icons ti ti-user ti-sm me-1_5"></i> Facebook</span><i class="ti ti-user ti-sm d-sm-none"></i>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button type="button" class="nav-link waves-effect" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-messages" aria-controls="navs-justified-messages" aria-selected="false" tabindex="-1">
+                <span class="d-none d-sm-block"><i class="tf-icons ti ti-message-dots ti-sm me-1_5"></i> Google</span><i class="ti ti-message-dots ti-sm d-sm-none"></i>
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade active show" id="navs-justified-home" role="tabpanel">
+            <p class="mb-0">
+                <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                    <div class="ps-3">
+                        <button id="checkAllButton" onclick="checkAll()" type="button" class="btn btn-primary px-4 raised d-flex gap-2"><i class="ti ti-aspect-ratio"></i>Chọn tất cả</button>
+                    </div>
+                    <div class="ps-2">
+                        <button id="uncheckAllButton" onclick="uncheckAll()" type="button" class="btn btn-secondary raised d-flex"><i class="ti ti-aspect-ratio"></i>Bỏ chọn</button>
+                    </div>
+                    <div class="ps-2">
+                        <button id="buttonAll" onclick="buttonAllClicked()" type="button" class="btn btn-success px-4 raised d-flex gap-2"><i class="ti ti-player-play"></i> Tự động chạy</button>
+                    </div>
+                    
+                     <div class="ps-4">
+                         <div class="ps-4">
+                            <select name="SelectedProfileGroup" id="SelectedProfileGroup" class="form-select">
+                                @foreach (var group in Model.ProfileGroupSelectList)
+                                {
+                                    <option value="@group.Value">@group.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="ps-2">
+                        <a asp-area="User" asp-controller="ProfileGroups" asp-action="Add" class="btn btn-success px-4 raised d-flex gap-2">
+                            <i class="ti ti-user-circle"></i> Nhóm hồ sơ
+                        </a>
+                    </div>
+                    <div class="ps-2">
+                        <a asp-area="User" asp-controller="ProfileOrbita" asp-action="TableProfileOrbita" class="btn btn-success px-4 raised d-flex gap-2">
+                            <i class="ti ti-calendar-user"></i>
+                            Thêm hồ sơ
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-datatable table-responsive">
+                    <table id="profileOrbitasTable" class="table datatables-users" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Chọn</th>
+                                <th>ID</th>
+                                <th>Profile Name</th>
+                                <th>Status</th>
+                                <th>Profile Group ID</th>
+                                <th>User ID</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="profileOrbitaTableBody">
+                            <!-- Table body will be dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </p>
+            <p class="mb-0">
+                Tootsie roll fruitcake cookie. Dessert topping pie. Jujubes wafer carrot cake jelly. Bonbon
+                jelly-o jelly-o ice cream jelly beans candy canes cake bonbon. Cookie jelly beans marshmallow
+                jujubes sweet.
+            </p>
+        </div>
+        <div class="tab-pane fade" id="navs-justified-profile" role="tabpanel">
+            <p>
+                Donut dragée jelly pie halvah. Danish gingerbread bonbon cookie wafer candy oat cake ice
+                cream. Gummies halvah tootsie roll muffin biscuit icing dessert gingerbread. Pastry ice cream
+                cheesecake fruitcake.
+            </p>
+            <p class="mb-0">
+                Jelly-o jelly beans icing pastry cake cake lemon drops. Muffin muffin pie tiramisu halvah
+                cotton candy liquorice caramels.
+            </p>
+        </div>
+        <div class="tab-pane fade" id="navs-justified-messages" role="tabpanel">
+            <p>
+                Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
+                cupcake gummi bears cake chocolate.
+            </p>
+            <p class="mb-0">
+                Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet
+                roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly
+                jelly-o tart brownie jelly.
+            </p>
         </div>
     </div>
 </div>
-<!--/ DataTable with Buttons -->
-@section PageScripts
-{
- 
-} 
+<hr>
+
+
+        
+
+
+@* 
+<!-- Added element to display serialized data -->
+<div>
+    <h3>Serialized Data</h3>
+    <pre id="jsonDataDisplay"></pre> <!-- Pre tag for better formatting -->
+</div>
+
+ *@

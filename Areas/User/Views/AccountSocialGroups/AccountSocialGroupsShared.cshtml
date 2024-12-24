@@ -1,0 +1,259 @@
+@model _UserMainDTO
+
+<div class="row">
+    <!-- Danh sách nhóm ở bên trái -->
+    <div class="col-md-9">
+        <h6 class="mb-0 text-uppercase">Danh sách nhóm</h6>
+    </div>
+    <!-- Nút Thêm mới ở bên phải -->
+    <div class="col-md-3 text-end">
+        <!-- Nút Thêm mới -->
+        <button type="button" class="btn btn-success waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#addGroupModal">
+            <i class="ti ti-plus me-1"></i> Thêm mới
+        </button>
+    </div>
+    <hr>
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-datatable table-responsive pt-0">
+                @await Html.PartialAsync("Tables/_DynamicTable", Model.AccountSocialGroupDetails?.Cast<dynamic>() ?? new List<dynamic>())
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addGroupModal" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Header của Modal -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="addGroupModalLabel">Thêm nhóm mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+           
+            <!-- Body của Modal -->
+            <div class="modal-body">
+                <form id="addGroupForm" method="post" asp-controller="AccountSocialGroups" asp-action="Save">
+                    <!-- Hidden field để lưu ID (dùng cho chức năng chỉnh sửa) -->
+                    <input type="hidden" id="Id" name="Id" value="" />
+
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Tên nhóm:</label>
+                        <input type="text" class="form-control" id="Name" name="Name" placeholder="Vui lòng điền tên nhóm" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="AccountTypeID" class="form-label">Chọn loại tài khoản:</label>
+                        <select name="AccountTypeID" id="AccountTypeID" class="form-select" required>
+                            <option value="">-- Chọn loại tài khoản --</option>
+                            @foreach (var type in (IEnumerable<SelectListItem>)ViewBag.AccountTypes)
+                            {
+                                <option value="@type.Value">@type.Text</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer của Modal -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" form="addGroupForm" id="submitButton" class="btn btn-success">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa mục này không?
+            </div>
+            <div class="modal-footer">
+                <form method="post" id="deleteForm">
+                    <input type="hidden" name="id" id="deleteId" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Delete -->
+
+
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.css">
+    <link rel="stylesheet" href="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css">
+    <link rel="stylesheet" href="~/vendor/libs/jquery-datatables/jquery.datatables.css">
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+}
+@section PageScripts {
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#profileTable').DataTable({
+                // Bạn có thể thêm tùy chọn ở đây, ví dụ:
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true
+            });
+        });
+    </script>
+    <script>
+        document.querySelector('.btn-close').addEventListener('click', function() {
+            // Refresh the page
+            location.reload();
+        });
+    </script>
+
+    <script>
+            function showNotification(message, type = "info")
+            {
+              // Tạo một thông báo mới
+              const notification = $(`<div class="toast align-items-center text-bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                  <div class="d-flex">
+                      <div class="toast-body">${message}</div>
+                      <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                  </div>
+              </div>`);
+
+              // Thêm vào container
+              $("#notificationContainer").append(notification);
+
+              // Hiển thị thông báo
+              const toastInstance = new bootstrap.Toast(notification[0]);
+              toastInstance.show();
+
+              // Tự động xóa thông báo sau khi ẩn
+              notification.on("hidden.bs.toast", function () {
+                  notification.remove();
+              });
+            }
+
+                    function openAddEditModal(isEdit, id = "") {
+            const modalTitle = isEdit ? "Chỉnh sửa nhóm" : "Thêm nhóm mới";
+            $("#addGroupModalLabel").text(modalTitle);
+
+            // Set action for form submission to 'Save'
+            $("#addGroupForm").attr("asp-action", "Save");
+
+            if (isEdit && id) {
+                // Fetching data for editing
+                $.ajax({
+                    url: `/User/AccountSocialGroups/Edit/${id}`,
+                    type: "GET",
+                    success: function (response) {
+                        if (response.success) {
+                            const { id, name, accountTypeID } = response.data;
+
+                            // Populate form fields with data
+                            $("#Id").val(id);
+                            $("#Name").val(name);
+                            $("#AccountTypeID").val(accountTypeID);
+
+                            $("#IdDisplayText").text(id);
+                            $("#idDisplay").show();
+
+                            showNotification(`Dữ liệu nhóm #${id} đã được tải thành công.`, "success");
+                        } else {
+                            showNotification(response.message, "error");
+                        }
+                    },
+                    error: function () {
+                        showNotification("Đã xảy ra lỗi khi lấy thông tin nhóm.", "error");
+                    }
+                });
+            } else {
+                // Preparing form for adding new group
+                $("#Id").val("");
+                $("#Name").val("");
+                $("#AccountTypeID").val("");
+
+                $("#IdDisplayText").text("");
+                $("#idDisplay").hide();
+
+                showNotification("Bạn đang thêm một nhóm mới.", "info");
+            }
+
+            const submitButtonText = isEdit ? "Cập nhật" : "Lưu";
+            $("#submitButton").text(submitButtonText);
+
+            const addGroupModal = new bootstrap.Modal(document.getElementById('addGroupModal'));
+            addGroupModal.show();
+        }
+
+                // Gắn sự kiện cho nút "Thêm mới"
+        $("#addButton").on("click", function () {
+            openAddEditModal(false); // Gọi modal cho thêm mới
+        });
+
+        // Gắn sự kiện cho nút "Chỉnh sửa"
+        $(".editButton").on("click", function () {
+            const id = $(this).data("id"); // Lấy ID từ thuộc tính data-id
+            openAddEditModal(true, id); // Gọi modal cho chỉnh sửa với ID cụ thể
+        });
+
+        
+    </script>
+
+    <!-- XOÁ -->
+    <script>
+          document.addEventListener("DOMContentLoaded", () => {
+          // Khởi tạo modal xóa
+          const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+          const deleteForm = document.getElementById("deleteForm");
+          const deleteIdInput = document.getElementById("deleteId");
+
+          // Gắn sự kiện cho tất cả các nút xóa
+          document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", (e) => {
+              const itemId = e.target.getAttribute("data-id");
+              deleteIdInput.value = itemId; // Gán giá trị id vào input hidden
+              // Đường dẫn API tương ứng cho controller trong Areas.User
+              deleteForm.action = `/User/AccountSocialGroups/Delete`;
+              deleteModal.show(); // Hiển thị modal
+            });
+          });
+        });
+
+                document.addEventListener("DOMContentLoaded", () => {
+          // Tìm tất cả các alert có lớp "auto-dismiss"
+          const alerts = document.querySelectorAll(".auto-dismiss");
+
+          // Tự động ẩn sau 6 giây (6000ms)
+          alerts.forEach(alert => {
+            setTimeout(() => {
+              alert.classList.remove("show"); // Loại bỏ lớp "show" để ẩn alert
+              alert.classList.add("fade");   // Thêm lớp "fade" để hiệu ứng mượt
+            }, 6000);
+
+            // Sau khi fade xong, xóa phần tử khỏi DOM
+            setTimeout(() => {
+              alert.remove();
+            }, 7000); // Thêm 1 giây để đảm bảo hiệu ứng fade hoàn thành
+          });
+        });
+    </script>
+    <!-- KẾT THÚC XOÁ -->
+
+    <script>
+        function changePage(newPage) {
+            // Logic to update currentPage and refresh the data binding in some way
+        }
+    </script>
+}

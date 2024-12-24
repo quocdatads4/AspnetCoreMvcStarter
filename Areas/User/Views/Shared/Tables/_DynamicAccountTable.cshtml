@@ -1,0 +1,45 @@
+@model IEnumerable<dynamic>
+
+@{
+    var columnNames = ViewBag.ColumnNames as List<string>;
+}
+<table id="profileTable" class="table display">
+    <thead>
+        <tr>
+            @if (columnNames != null)
+            {
+                foreach (var columnName in columnNames)
+                {
+                    <th>@columnName</th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @foreach (var prop in item.GetType().GetProperties())
+                {
+                    <td>@prop.GetValue(item, null)</td>
+                }
+                <td>
+                    <!-- Nút Sửa -->
+                    <button type="button" class="btn btn-warning editButton"
+                            data-id="@item.Id"
+                            data-name="@item.Name">
+                        <i class="ti ti-edit me-1"></i> Sửa
+                    </button>
+                    <!-- Nút Xóa -->
+                    <button type="button" class="btn btn-danger deleteButton"
+                            data-id="@item.Id"
+                            data-name="@item.Name">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

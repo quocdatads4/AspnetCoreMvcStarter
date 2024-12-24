@@ -28,15 +28,23 @@ builder.Services.Configure<IdentityOptions>(otp =>
 }
 );
 
-builder.Services.AddScoped<ProfileGroupsBLL>();
-builder.Services.AddScoped<ProfileGroupsDAL>();
+builder.Services.AddScoped(typeof(ProfileOrbitasRepository<>));
+builder.Services.AddScoped(typeof(ProfileOrbitasService<>));
 
 builder.Services.AddScoped<ProfileOrbitasBLL>();
 builder.Services.AddScoped<ProfileOrbitasDAL>();
 
+//builder.Services.AddScoped(typeof(AccountSocialGroupsRepository<>));
+//builder.Services.AddScoped(typeof(AccountSo<>));
+
+builder.Services.AddScoped(typeof(SocialGroupsRepository<>));
+builder.Services.AddScoped(typeof(SocialGroupsService<>));
+
 var app = builder.Build();
 
-//// Seed data
+// Seed data
+
+
 //using (var scope = app.Services.CreateScope())
 //{
 //  var services = scope.ServiceProvider;
@@ -52,6 +60,8 @@ var app = builder.Build();
 //    // Log or handle the exception as needed
 //  }
 //}
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -72,7 +82,7 @@ app.UseRouting();
 
 app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=ProfileOrbitas}/{action=ProfileOrbitasList}/{id?}");
+    pattern: "{area:exists}/{controller=ProfileOrbitas}/{action=List}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

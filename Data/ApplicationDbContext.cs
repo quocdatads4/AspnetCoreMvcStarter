@@ -18,8 +18,9 @@ namespace AspnetCoreMvcStarter.Data
     }
 
     public DbSet<ApplicationUser> ApplicationUser { get; set; }
-    public DbSet<ProfileGroupsDTO> ProfileGroups { get; set; }
     public DbSet<ProfileOrbitasDTO> ProfileOrbitas { get; set; }
-
+    public DbSet<FacebookAccountsDTO> FacebookAccounts { get; set; }
+    public DbSet<AccountSocialGroupsDTO> AccountSocialGroups { get; set; }
+    public DbSet<AccountSocialTypeDTO> AccountSocialTypes { get; set; }
   }
 }

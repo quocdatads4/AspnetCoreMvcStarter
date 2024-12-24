@@ -1,0 +1,87 @@
+@model IEnumerable<dynamic>
+
+@{
+    var columnNames = ViewBag.ColumnNames as List<string>;
+    var successMessage = TempData["Success"] as string;
+    var errorMessage = TempData["Error"] as string;
+}
+<table id="profileTable" class="table display">
+    <thead>
+        <tr>
+            @if (columnNames != null)
+            {
+                foreach (var columnName in columnNames)
+                {
+                    <th>@columnName</th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><input type="checkbox" id="@item.Id" name="orbitaCheckboxes" value="@item.Id" /></td>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.CreatedDate</td>
+                <td>@item.Status</td>
+                <td>@item.IPAddress</td>
+                <td>@item.Country</td>
+                <td>@item.GroupName</td>
+                <td width="30%">
+                    <button id="@item.Id" onclick="buttonClicked(this.id)" class="btn btn-success openButton waves-effect waves-light">
+                        <i class="ti ti-player-play"></i> Mở
+                    </button>
+                    <!-- Nút Sửa -->
+                    <a href="@Url.Action("Edit", "ProfileOrbitas", new { id = item.Id })" class="btn btn-warning">
+                        <i class="ti ti-edit me-1"></i> Sửa
+                    </a>
+                    <!-- Nút Xóa -->
+                    <button type="button" class="btn btn-danger delete-btn" data-id="@item.Id">
+                        Xóa
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa mục này không?
+            </div>
+            <div class="modal-footer">
+                <form method="post" id="deleteForm">
+                    <input type="hidden" name="id" id="deleteId" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Modal -->
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show auto-dismiss" role="alert">
+        @successMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show auto-dismiss" role="alert">
+        @errorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}

@@ -21,13 +21,12 @@ public class AuthController : Controller
   [HttpGet]
   public IActionResult ForgotPasswordBasic() => View();
 
-  [HttpPost]
-  [ValidateAntiForgeryToken]
-  public async Task<IActionResult> ForgotPasswordBasic(ForgotPasswordVM model, string returnurl = null)
-  {
-   
-    return View();
-  }
+  //[HttpPost]
+  //[ValidateAntiForgeryToken]
+  //public async Task<IActionResult> ForgotPasswordBasic(ForgotPasswordVM model, string returnurl = null)
+  //{
+  //  return View();
+  //}
   private bool CheckEmailExists(string email)
   {
     // Kiểm tra email trong database
@@ -90,7 +89,6 @@ public class AuthController : Controller
       {
         UserName = model.Email,
         Email = model.Email,
-        Name = model.Name
       };
 
       var result = await _userManager.CreateAsync(user, model.Password);

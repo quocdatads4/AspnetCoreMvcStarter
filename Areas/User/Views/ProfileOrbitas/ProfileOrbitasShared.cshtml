@@ -1,0 +1,149 @@
+@model _UserMainDTO
+@{
+    ViewData["Title"] = "User List - Pages";
+}
+
+
+@* ************** Content ************** *@
+
+<!-- Users List Table -->
+
+<div class="row">
+    <!-- Danh sách nhóm ở bên trái -->
+    <div class="col-md-9">
+        <h6 class="mb-0 text-uppercase">Danh sách nhóm</h6>
+    </div>
+    <!-- Nút Thêm mới ở bên phải -->
+    <div class="col-md-3 text-end">
+        <!-- Nút Thêm mới -->
+        <button type="button" class="btn btn-success waves-effect waves-light" asp-area="User" asp-controller="ProfileOrbita" asp-action="TableProfileOrbita">
+            <i class="ti ti-plus me-1"></i> Thêm hồ sơ mới
+        </button>
+    </div>
+    <hr>
+    <div class="col-xl-12">
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                        <div class="ps-3">
+                            <button id="checkAllButton" onclick="checkAll()" type="button" class="btn btn-primary px-4 raised d-flex gap-2"><i class="ti ti-aspect-ratio"></i>Chọn tất cả</button>
+                        </div>
+                        <div class="ps-2">
+                            <button id="uncheckAllButton" onclick="uncheckAll()" type="button" class="btn btn-secondary raised d-flex"><i class="ti ti-aspect-ratio"></i>Bỏ chọn</button>
+                        </div>
+                        <div class="ps-2">
+                            <button id="buttonAll" onclick="buttonAllClicked()" type="button" class="btn btn-success px-4 raised d-flex gap-2"><i class="ti ti-player-play"></i> Tự động chạy</button>
+                        </div>
+                        <div class="ps-2">
+                            <a asp-area="User" asp-controller="AccountSocialGroups" asp-action="List" class="btn btn-success px-4 raised d-flex gap-2">
+                                <i class="ti ti-user-circle"></i> Nhóm hồ sơ
+                            </a>
+                        </div>
+                        <div class="ps-2">
+                            <a asp-area="User" asp-controller="ProfileOrbita" asp-action="TableProfileOrbita" class="btn btn-success px-4 raised d-flex gap-2">
+                                <i class="ti ti-calendar-user"></i>
+                                Thêm hồ sơ
+                            </a>
+                        </div>
+            <div class="ps-2">
+                <select name="AccountSocialGroupsID" id="AccountSocialGroupsID" class="form-select" required>
+                    <option value="">-- Chọn loại tài khoản --</option>
+                    @foreach (var type in (IEnumerable<SelectListItem>)ViewBag.AccountSocialGroups)
+                    {
+                        <option value="@type.Value">@type.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="ps-2">
+                <select name="AccountSocialTypeID" id="AccountSocialTypeID" class="form-select" required>
+                    <option value="">-- Chọn loại tài khoản --</option>
+                    @foreach (var type in (IEnumerable<SelectListItem>)ViewBag.AccountSocialType)
+                    {
+                        <option value="@type.Value">@type.Text</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-datatable table-responsive pt-0">
+                @await Html.PartialAsync("Tables/_DynamicProfileTable", Model.ProfileOrbitasDetails?.Cast<dynamic>() ?? new List<dynamic>())
+            </div>
+        </div>
+    </div>
+</div>
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.css">
+    <link rel="stylesheet" href="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css">
+    <link rel="stylesheet" href="~/vendor/libs/jquery-datatables/jquery.datatables.css">
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+}
+@section PageScripts {
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        function changePage(newPage) {
+            // Logic to update currentPage and refresh the data binding in some way
+        }
+    </script>
+
+    <!-- PHÂN TRANG TABLE -->
+    <script>
+        $(document).ready(function() {
+            $('#profileTable').DataTable({
+                pageLength: 12,  // Số hàng mặc định mỗi trang
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true
+            });
+        });
+    </script>
+    <!-- KẾT THÚC PHÂN TRANG TABLE -->
+    <!-- XOÁ -->
+    <script>
+          document.addEventListener("DOMContentLoaded", () => {
+          // Khởi tạo modal xóa
+          const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+          const deleteForm = document.getElementById("deleteForm");
+          const deleteIdInput = document.getElementById("deleteId");
+
+          // Gắn sự kiện cho tất cả các nút xóa
+          document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", (e) => {
+              const itemId = e.target.getAttribute("data-id");
+              deleteIdInput.value = itemId; // Gán giá trị id vào input hidden
+              // Đường dẫn API tương ứng cho controller trong Areas.User
+              deleteForm.action = `/User/ProfileOrbitas/Delete`;
+              deleteModal.show(); // Hiển thị modal
+            });
+          });
+        });
+
+          document.addEventListener("DOMContentLoaded", () => {
+          // Tìm tất cả các alert có lớp "auto-dismiss"
+          const alerts = document.querySelectorAll(".auto-dismiss");
+
+          // Tự động ẩn sau 6 giây (6000ms)
+          alerts.forEach(alert => {
+            setTimeout(() => {
+              alert.classList.remove("show"); // Loại bỏ lớp "show" để ẩn alert
+              alert.classList.add("fade");   // Thêm lớp "fade" để hiệu ứng mượt
+            }, 6000);
+
+            // Sau khi fade xong, xóa phần tử khỏi DOM
+            setTimeout(() => {
+              alert.remove();
+            }, 7000); // Thêm 1 giây để đảm bảo hiệu ứng fade hoàn thành
+          });
+        });
+    </script>
+    <!-- KẾT THÚC XOÁ -->
+}
+

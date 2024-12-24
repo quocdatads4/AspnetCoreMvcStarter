@@ -21,9 +21,9 @@ namespace AspnetCoreMvcStarter.Areas.User.Data
       {
         var data = new ProfileOrbitasDTO
         {
-          ProfileName = "Profile " + (i + 1),
-          ProfileGroupID = random.Next(1, 10) // Random group ID from 1 to 9
-        };
+          Name = "Profile " + (i + 1),
+          ProfileGroupID = i + 1
+  };
 
         _context.ProfileOrbitas.Add(data);
       }

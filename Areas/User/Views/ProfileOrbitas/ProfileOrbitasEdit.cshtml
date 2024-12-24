@@ -1,0 +1,38 @@
+@model _UserMainDTO
+@{
+    ViewData["Title"] = "Chỉnh sửa hồ sơ";
+}
+
+<div class="row">
+    <div class="col-xl-4">
+        <h6 class="mb-0 text-uppercase">CHỈNH SỬA HỒ SƠ</h6>
+        <hr>
+        <div class="card">
+            <div class="card-body">
+                <form asp-area="User" asp-controller="ProfileOrbitas" asp-action="Edit" method="POST">
+                    <!-- Thêm token bảo mật cho POST request -->
+                    <input type="hidden" name="ProfileOrbitas.Id" value="@Model.ProfileOrbitas.Id">
+
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Tên hồ sơ:</label>
+                        <input type="text" class="form-control" id="name" name="ProfileOrbitas.Name" value="@Model.ProfileOrbitas.Name" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="profileGroupId" class="form-label">Chọn loại tài khoản:</label>
+                        <select name="profileGroupId" id="profileGroupId" class="form-select" readonly>
+                            <option value="">-- Chọn loại tài khoản --</option>
+                            @foreach (var type in (IEnumerable<SelectListItem>)ViewBag.AccountSocialGroups)
+                            {
+                                <option value="@type.Value">@type.Text</option>
+                            }
+                        </select>
+                    </div>
+                    
+                    <!-- Edit Button -->
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
